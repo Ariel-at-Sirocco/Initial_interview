@@ -1,0 +1,78 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\Sirocco\\Interview\\Initial_interview\\First_interview_ConsoleApp\\First_interview_ConsoleApp.csproj": {}
+  },
+  "projects": {
+    "D:\\Sirocco\\Interview\\Initial_interview\\First_interview_ConsoleApp\\First_interview_ConsoleApp.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Sirocco\\Interview\\Initial_interview\\First_interview_ConsoleApp\\First_interview_ConsoleApp.csproj",
+        "projectName": "First_interview_ConsoleApp",
+        "projectPath": "D:\\Sirocco\\Interview\\Initial_interview\\First_interview_ConsoleApp\\First_interview_ConsoleApp.csproj",
+        "packagesPath": "C:\\Users\\te03285\\.nuget\\packages\\",
+        "outputPath": "D:\\Sirocco\\Interview\\Initial_interview\\First_interview_ConsoleApp\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\te03285\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net4.8"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net48": {
+            "targetAlias": "net4.8",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net48": {
+          "targetAlias": "net4.8",
+          "dependencies": {
+            "Microsoft.CrmSdk.CoreAssemblies": {
+              "target": "Package",
+              "version": "[9.0.2.48, )"
+            },
+            "Microsoft.CrmSdk.XrmTooling.CoreAssembly": {
+              "target": "Package",
+              "version": "[9.1.1.1, )"
+            },
+            "Microsoft.PowerPlatform.Dataverse.Client": {
+              "target": "Package",
+              "version": "[1.0.26, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[6.27.0, )"
+            },
+            "System.ServiceModel.Primitives": {
+              "target": "Package",
+              "version": "[4.10.0, )"
+            },
+            "System.Web.Services.Description": {
+              "target": "Package",
+              "version": "[4.10.0, )"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.201\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win7-x86": {
+          "#import": []
+        }
+      }
+    }
+  }
+}

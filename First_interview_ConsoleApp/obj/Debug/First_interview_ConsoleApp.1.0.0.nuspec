@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>First_interview_ConsoleApp</id>
+    <version>1.0.0</version>
+    <authors>First_interview_ConsoleApp</authors>
+    <description>Package Description</description>
+    <dependencies>
+      <group targetFramework="net6.0">
+        <dependency id="Microsoft.CrmSdk.CoreAssemblies" version="9.0.2.48" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="D:\Sirocco\Interview\Initial_interview\First_interview_ConsoleApp\bin\Debug\net6.0\First_interview_ConsoleApp.runtimeconfig.json" target="lib\net6.0\First_interview_ConsoleApp.runtimeconfig.json" />
+    <file src="D:\Sirocco\Interview\Initial_interview\First_interview_ConsoleApp\bin\Debug\net6.0\First_interview_ConsoleApp.dll" target="lib\net6.0\First_interview_ConsoleApp.dll" />
+  </files>
+</package>
