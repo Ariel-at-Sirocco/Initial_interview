@@ -35,7 +35,6 @@ namespace ConsoleApplication
              * <summary>
              *  Generates connection string with connection information. 
              * </summary>           
-             * 
              */
             string connectionString = $@"
                                     AuthType = 'OAuth';
@@ -54,10 +53,7 @@ namespace ConsoleApplication
         {
             /**
             * <summary>
-            *  Reads App.config files and returns config info. For this test, it is simplified and only
-            *   URL information shall be considered
-            *  User & Pass shall be obtained at execution time 
-            *
+            *  Reads App.config files and returns Password info. 
             * </summary>           
             */
 
@@ -68,23 +64,17 @@ namespace ConsoleApplication
         {
             /**
              * <summary>
-             *  Reads App.config files and returns config info. For this test, it is simplified and only
-             *   URL information shall be considered
-             *  User & Pass shall be obtained at execution time 
-             *
+             *  Reads App.config files and returns URL info.  
              * </summary>           
              */
-
+            
             return (ConfigurationManager.AppSettings[URL_KEY]);
         }
         static public string GetAppConfigUserName()
         {
             /**
              * <summary>
-             *  Reads App.config files and returns config info. For this test, it is simplified and only
-             *   URL information shall be considered
-             *  User & Pass shall be obtained at execution time 
-             *
+             *  Reads App.config files and returns UserName info. 
              * </summary>           
              */
 
@@ -96,7 +86,6 @@ namespace ConsoleApplication
             /**
             * <summary>
             * returns ServiceClient related to the provided endpoint information.
-            *
             * </summary>           
             */
 
@@ -135,15 +124,15 @@ namespace ConsoleApplication
         //obtained from App.config
         //static string USER_NAME = "mail@mail.com";
         //static string PASSWORD  = "pass";
-        //static string URL     = "url"; 
+        //static string URL       = "url"; 
 
         //info for Entities
         private const string ACCOUNT_ENTITY = "account";
         private const string CONTACT_ENTITY = "contact";
-        private const string NOTE_ENTITY = "annotation";
+        private const string NOTE_ENTITY    = "annotation";
 
         // Relationship keys:
-        private const string ACCOUNT_PARENT_ACCOUNT_REL = "account_parent_account";
+        private const string ACCOUNT_PARENT_ACCOUNT_REL  = "account_parent_account";
         private const string ACCOUNT_PRIMARY_CONTACT_REL = "account_primary_contact";
         private const string NOTE_ACCOUNT_REL = "objectid_account";
         private const string NOTE_CONTACT_REL = "objectid_account";
@@ -160,21 +149,18 @@ namespace ConsoleApplication
                 Console.WriteLine("-----------------" + '\n');
 
                 ServiceClient serviceClient = Utils.GetServiceClient(Utils.GetAppConfigURL(),
-                                                                    Utils.GetAppConfigUserName(),
-                                                                    Utils.GetAppConfigPassword()
-                                                                    );
+                                                                     Utils.GetAppConfigUserName(),
+                                                                     Utils.GetAppConfigPassword()
+                                                                     );
+
                 if (serviceClient.IsReady)
                 {
                     WhoAmIResponse response = (WhoAmIResponse)serviceClient.Execute(new WhoAmIRequest());
-                    //Console.WriteLine("Connected to CRM - User ID is {0}.", response.UserId);
-
+                    
                     /***
                      *  Step 7: Create 2 account and parent-child rel. use Late Binding.
                      *  In Production environment I would have modeled and included entities in 
                      *  JSON structures for processing them in a loop. Also for performance concerns                 
-                     *  
-                     *  in this assessment I would create entities manually for simplification purposes
-                     *  
                      */
                     Console.WriteLine("\n");
                     Console.WriteLine("-----------------");
@@ -185,22 +171,24 @@ namespace ConsoleApplication
                     var parentAccount = new Entity();
                     //set entity logical name  & values
                     parentAccount.LogicalName = ACCOUNT_ENTITY;
-                    parentAccount["name"] = "Rock Inc";
+                    parentAccount["name"]     = "Rock Inc";
 
                     // child account
                     var childAccount = new Entity();
                     //set entity logical name & values
                     childAccount.LogicalName = ACCOUNT_ENTITY;
-                    childAccount["name"] = "Beatles Inc";
+                    childAccount["name"]     = "Beatles Inc";
 
                     // Add the child account to an EntityCollection
                     EntityCollection childAccountCollection = new EntityCollection();
                     childAccountCollection.Entities.Add(childAccount);
 
                     // Set  relationship
-                    Relationship accountRelationship = new Relationship(ACCOUNT_PARENT_ACCOUNT_REL);
+                    Relationship accountRelationship      = new Relationship(ACCOUNT_PARENT_ACCOUNT_REL);
                     accountRelationship.PrimaryEntityRole = EntityRole.Referenced;
-                    parentAccount.RelatedEntities.Add(accountRelationship, childAccountCollection);
+                    parentAccount.RelatedEntities.Add(accountRelationship, 
+                                                      childAccountCollection
+                                                      );
 
                     // Create the related accounts in CRM
                     Guid parentAccountGuid = serviceClient.Create(parentAccount);
@@ -219,38 +207,38 @@ namespace ConsoleApplication
                     // Parent account contact    
                     var parentContact = new Entity();
                     //set entity logical name & value
-                    parentContact.LogicalName = CONTACT_ENTITY;
+                    parentContact.LogicalName  = CONTACT_ENTITY;
                     parentContact["firstname"] = "Jack";
-                    parentContact["lastname"] = "Black";
+                    parentContact["lastname"]  = "Black";
 
                     // Child account contact    
                     var childContact = new Entity();
                     //set entity logical name
-                    childContact.LogicalName = CONTACT_ENTITY;
+                    childContact.LogicalName  = CONTACT_ENTITY;
                     childContact["firstname"] = "Ringo";
-                    childContact["lastname"] = "Star";
+                    childContact["lastname"]  = "Star";
 
                     //Create contacts
                     Guid parentContactGuid = serviceClient.Create(parentContact);
-                    Guid childContactGuid = serviceClient.Create(childContact);
+                    Guid childContactGuid  = serviceClient.Create(childContact);
 
                     // get Account reference by name    
                     EntityReferenceCollection parentAccountReferenceCollection = Utils
                         .GetAccountsReferencesByName((string)parentAccount["name"],
-                                                              serviceClient
-                                                              );
+                                                             serviceClient
+                                                    );
 
                     EntityReferenceCollection childAccountReferenceCollection = Utils
                         .GetAccountsReferencesByName((string)childAccount["name"],
-                                                              serviceClient
-                                                             );
+                                                             serviceClient
+                                                    );
 
                     // Use the Associate method for association to parent account
                     AssociateRequest associationRequest = new AssociateRequest()
                     {
                         RelatedEntities = parentAccountReferenceCollection,
-                        Relationship = new Relationship(ACCOUNT_PRIMARY_CONTACT_REL),
-                        Target = new EntityReference("contact", parentContactGuid)
+                        Relationship    = new Relationship(ACCOUNT_PRIMARY_CONTACT_REL),
+                        Target          = new EntityReference(CONTACT_ENTITY, parentContactGuid)
                     };
                     serviceClient.Execute(associationRequest);
 
@@ -258,8 +246,8 @@ namespace ConsoleApplication
                     associationRequest = new AssociateRequest()
                     {
                         RelatedEntities = childAccountReferenceCollection,
-                        Relationship = new Relationship(ACCOUNT_PRIMARY_CONTACT_REL),
-                        Target = new EntityReference("contact", childContactGuid)
+                        Relationship    = new Relationship(ACCOUNT_PRIMARY_CONTACT_REL),
+                        Target          = new EntityReference(CONTACT_ENTITY, childContactGuid)
                     };
                     serviceClient.Execute(associationRequest);
 
@@ -280,8 +268,8 @@ namespace ConsoleApplication
                                                                     parentAccountGuid,
                                                                     new ColumnSet("name")
                                                                     );
-                    Entity modifiedAccount = new Entity(ACCOUNT_ENTITY);
-                    modifiedAccount.Id = parentAccountGuid;
+                    Entity modifiedAccount  = new Entity(ACCOUNT_ENTITY);
+                    modifiedAccount.Id      = parentAccountGuid;
                     modifiedAccount["name"] = retrievedAccount["name"];
                     //new value
                     modifiedAccount["numberofemployees"] = 500;
@@ -291,12 +279,11 @@ namespace ConsoleApplication
                     //get old values
                     Entity retrievedContact = serviceClient.Retrieve(CONTACT_ENTITY,
                                                                      parentContactGuid,
-                                                                     new ColumnSet("firstname",
-                                                                                   "lastname")
+                                                                     new ColumnSet("firstname","lastname")
                                                                      );
 
-                    Entity modifiedContact = new Entity(CONTACT_ENTITY);
-                    modifiedContact.Id = parentContactGuid;
+                    Entity modifiedContact       = new Entity(CONTACT_ENTITY);
+                    modifiedContact.Id           = parentContactGuid;
                     modifiedContact["firstname"] = retrievedContact["firstname"];
                     //new value
                     modifiedContact["lastname"] = retrievedContact["lastname"] + " (updated)";
@@ -316,16 +303,17 @@ namespace ConsoleApplication
                     Entity noteForParentAccount = new Entity();
                     //set entity logical name
                     noteForParentAccount.LogicalName = NOTE_ENTITY;
-                    noteForParentAccount["subject"] = "Hey";
+                    noteForParentAccount["subject"]  = "Hey";
                     noteForParentAccount["notetext"] = "this is note 1";
                     //reference from annotation to account
-                    noteForParentAccount["objectid"] = new EntityReference(ACCOUNT_ENTITY, parentAccountGuid);
+                    noteForParentAccount["objectid"]       = new EntityReference(ACCOUNT_ENTITY, parentAccountGuid);
                     noteForParentAccount["objecttypecode"] = ACCOUNT_ENTITY;
 
                     /***
                      * Setp  11.	Create two notes and associate them with the second contact
                      * 
-                     * all notes all created at once usign Execute Multiple Request object (due to performance concerns & demo purpose)
+                     * all notes all created at once usign Execute Multiple Request object 
+                     * (due to performance concerns & demo purpose)
                      * 
                      */
 
@@ -333,20 +321,20 @@ namespace ConsoleApplication
                     Entity noteForChildContact1 = new Entity();
                     //set entity logical name
                     noteForChildContact1.LogicalName = NOTE_ENTITY;
-                    noteForChildContact1["subject"] = "Note 1";
+                    noteForChildContact1["subject"]  = "Note 1";
                     noteForChildContact1["notetext"] = "this is note 1 for Child contact";
                     //reference from annotation to account
-                    noteForChildContact1["objectid"] = new EntityReference(CONTACT_ENTITY, childContactGuid);
+                    noteForChildContact1["objectid"]       = new EntityReference(CONTACT_ENTITY, childContactGuid);
                     noteForChildContact1["objecttypecode"] = CONTACT_ENTITY;
 
                     // Note 2 for child contact
                     Entity noteForChildContact2 = new Entity();
                     //set entity logical name
                     noteForChildContact2.LogicalName = NOTE_ENTITY;
-                    noteForChildContact2["subject"] = "Note 2";
+                    noteForChildContact2["subject"]  = "Note 2";
                     noteForChildContact2["notetext"] = "this is note 2 for Child contact";
                     //reference from annotation to account
-                    noteForChildContact2["objectid"] = new EntityReference(CONTACT_ENTITY, childContactGuid);
+                    noteForChildContact2["objectid"]       = new EntityReference(CONTACT_ENTITY, childContactGuid);
                     noteForChildContact2["objecttypecode"] = CONTACT_ENTITY;
 
                     // Create an ExecuteMultipleRequest object.
@@ -400,8 +388,7 @@ namespace ConsoleApplication
                                          name     = con["firstname"],  
                                          notetext = note["notetext"]
                                      }).Distinct();
-
-
+                    
                     }
 
                     Console.WriteLine("done");
